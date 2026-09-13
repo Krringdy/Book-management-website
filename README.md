@@ -20,17 +20,30 @@ Website bán sách trực tuyến, xây dựng theo mô hình fullstack: fronten
 
 ```
 dunavitu-books/
-├── index.html
-├── script.js
-├── style.css
-├── modal-styles.css
-├── pages/              # các trang phụ (admin, orders...)
-└── dunavitu-backend/
+├── README.md
+├── .gitignore
+├── frontend/
+│   ├── index.html
+│   ├── script.js
+│   ├── style.css
+│   ├── modal-styles.css
+│   └── pages/
+│       ├── admin.html / admin.js / admin.css
+│       ├── orders.html
+│       ├── script_orders.js
+│       └── style_orders.css
+└── backend/
     ├── server.js
     ├── db.js
-    ├── database.sql    # schema database
-    ├── routes/          # các route API (auth, books, orders, users, categories)
-    └── .env.example     # mẫu biến môi trường
+    ├── database.sql      # schema database
+    ├── package.json
+    ├── .env.example      ← thay cho .env
+    └── routes/
+        ├── auth.js
+        ├── books.js
+        ├── categories.js
+        ├── orders.js
+        └── users.js
 ```
 
 ## Cài đặt và chạy thử
