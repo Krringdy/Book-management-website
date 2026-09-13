@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị - Dunavitu Books</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <!-- AUTH GUARD OVERLAY -->
+    <div id="auth-guard" style="
+  position:fixed;inset:0;background:#1a0a0a;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:9998;transition:opacity 0.4s;">
+
+        <div style="color:#d7b98c;font-size:28px;letter-spacing:4px;font-weight:700;margin-bottom:12px;">DUNAVITU</div>
+        <div style="color:rgba(255,255,255,0.35);font-size:13px;letter-spacing:2px;">ADMIN PANEL</div>
+        <div
+            style="margin-top:32px;width:40px;height:40px;border:3px solid rgba(215,185,140,0.15);border-top-color:#d7b98c;border-radius:50%;animation:spin 0.8s linear infinite;">
+        </div>
+        <style>
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg)
+                }
+            }
+        </style>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h1>DUNAVITU</h1>
+            <p>ADMIN PANEL</p>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item active" onclick="switchTab('dashboard')">
+                <span class="icon">📊</span> Tổng quan
+            </div>
+            <div class="nav-item" onclick="switchTab('books')">
+                <span class="icon">📚</span> Quản lý sách
+            </div>
+            <div class="nav-item" onclick="switchTab('orders')">
+                <span class="icon">📦</span> Đơn hàng
+            </div>
+            <div class="nav-item" onclick="switchTab('users')">
+                <span class="icon">👥</span> Người dùng
+            </div>
+            <div class="nav-item" onclick="switchTab('categories')">
+                <span class="icon">🏷️</span> Danh mục
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-info">
+                <div class="admin-avatar" id="admin-avatar">A</div>
+                <div>
+                    <div class="admin-name" id="admin-name">Admin</div>
+                    <div class="admin-role">Quản trị viên</div>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">🚪 Đăng xuất</button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- DASHBOARD TAB -->
+        <div class="tab-content active" id="tab-dashboard">
+            <div class="page-header">
+                <div>
+                    <h2>Tổng quan</h2>
+                    <p>Chào mừng trở lại, <span id="welcome-name">Admin</span>!</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card highlight">
+                    <div class="stat-label">📚 Tổng sách</div>
+                    <div class="stat-value" id="stat-books">—</div>
+                    <div class="stat-sub">đầu sách trong kho</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">📦 Đơn hàng</div>
+                    <div class="stat-value" id="stat-orders">—</div>
+                    <div class="stat-sub">tổng đơn đã đặt</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">👥 Người dùng</div>
+                    <div class="stat-value" id="stat-users">—</div>
+                    <div class="stat-sub">tài khoản đã đăng ký</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">⏳ Chờ xử lý</div>
+                    <div class="stat-value" id="stat-pending">—</div>
+                    <div class="stat-sub">đơn hàng pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">🏷️ Danh mục</div>
+                    <div class="stat-value" id="stat-categories">—</div>
+                    <div class="stat-sub">danh mục sản phẩm</div>
+                </div>
+                <div class="stat-card" style="background:linear-gradient(135deg,#1a4a1a,#2d7a2d);grid-column:span 2;">
+                    <div class="stat-label" style="color:rgba(255,255,255,0.7)">💰 Doanh thu (đơn hoàn thành)</div>
+                    <div class="stat-value" id="stat-revenue" style="color:white;font-size:28px">—</div>
+                    <div class="stat-sub" id="stat-revenue-done" style="color:rgba(255,255,255,0.5)">đơn hoàn thành
+                    </div>
+                </div>
+                <div class="stat-card" style="background:linear-gradient(135deg,#1a3a5c,#2563a8);grid-column:span 2;">
+                    <div class="stat-label" style="color:rgba(255,255,255,0.7)">📈 Doanh thu dự kiến (tất cả đơn)</div>
+                    <div class="stat-value" id="stat-revenue-all" style="color:white;font-size:28px">—</div>
+                    <div class="stat-sub" style="color:rgba(255,255,255,0.5)">bao gồm đơn đang xử lý</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>📦 Đơn hàng gần đây</h3>
+                </div>
+                <div id="recent-orders">
+                    <div class="loading">Đang tải...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOOKS TAB -->
+        <div class="tab-content" id="tab-books">
+            <div class="page-header">
+                <div>
+                    <h2>Quản lý sách</h2>
+                    <p>Thêm, sửa, xóa sách trong hệ thống</p>
+                </div>
+                <button class="btn btn-primary" onclick="openBookModal()">+ Thêm sách</button>
+            </div>
+            <div class="toolbar">
+                <input type="text" id="book-search" placeholder="🔍 Tìm theo tên, tác giả..." oninput="filterBooks()">
+                <select id="book-cat-filter" onchange="filterBooks()">
+                    <option value="">Tất cả danh mục</option>
+                    <option value="c1">Văn học</option>
+                    <option value="c2">Kinh tế</option>
+                    <option value="c3">Thiếu nhi</option>
+                    <option value="c4">Tâm lý</option>
+                </select>
+            </div>
+            <div class="card">
+                <div id="books-table">
+                    <div class="loading">Đang tải...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ORDERS TAB -->
+        <div class="tab-content" id="tab-orders">
+            <div class="page-header">
+                <div>
+                    <h2>Đơn hàng</h2>
+                    <p>Quản lý và cập nhật trạng thái đơn hàng</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateOrderModal()">+ Thêm đơn hàng</button>
+            </div>
+            <div class="toolbar">
+                <select id="order-status-filter" onchange="filterOrders()">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="confirmed">Đã xác nhận</option>
+                    <option value="shipping">Đang giao</option>
+                    <option value="done">Hoàn thành</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+            </div>
+            <div class="card">
+                <div id="orders-table">
+                    <div class="loading">Đang tải...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- USERS TAB -->
+        <div class="tab-content" id="tab-users">
+            <div class="page-header">
+                <div>
+                    <h2>Người dùng</h2>
+                    <p>Danh sách tài khoản đã đăng ký</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateUserModal()">+ Thêm tài khoản</button>
+            </div>
+            <div class="card">
+                <div id="users-table">
+                    <div class="loading">Đang tải...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORIES TAB -->
+        <div class="tab-content" id="tab-categories">
+            <div class="page-header">
+                <div>
+                    <h2>Quản lý danh mục</h2>
+                    <p>Thêm, sửa, xóa danh mục sản phẩm</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCatModal()">+ Thêm danh mục</button>
+            </div>
+            <div class="card">
+                <div id="categories-table">
+                    <div class="loading">Đang tải...</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL THÊM/SỬA SÁCH -->
+    <div class="modal" id="modal-book">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h3 id="modal-book-title">Thêm sách mới</h3>
+            <input type="hidden" id="book-id">
+            <div class="form-group">
+                <label>Tên sách *</label>
+                <input type="text" id="f-title" placeholder="Nhập tên sách">
+            </div>
+            <div class="form-group">
+                <label>Tác giả *</label>
+                <input type="text" id="f-author" placeholder="Tên tác giả">
+            </div>
+            <div class="form-group">
+                <label>Mô tả</label>
+                <textarea id="f-desc" placeholder="Mô tả ngắn về nội dung sách..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Giá (VNĐ) *</label>
+                    <input type="number" id="f-price" placeholder="129000">
+                </div>
+                <div class="form-group">
+                    <label>Tồn kho</label>
+                    <input type="number" id="f-stock" placeholder="50">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>URL ảnh bìa</label>
+                <input type="text" id="f-image" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>Danh mục</label>
+                <select id="f-cat">
+                    <option value="">-- Chọn danh mục --</option>
+                    <option value="c1">Văn học</option>
+                    <option value="c2">Kinh tế</option>
+                    <option value="c3">Thiếu nhi</option>
+                    <option value="c4">Tâm lý</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Phân loại</label>
+                <div class="form-checks">
+                    <label><input type="checkbox" id="f-featured"> Nổi bật</label>
+                    <label><input type="checkbox" id="f-new"> Sách mới</label>
+                    <label><input type="checkbox" id="f-trending"> Thịnh hành</label>
+                    <label><input type="checkbox" id="f-foreign"> Nước ngoài</label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="saveBook()" style="flex:1">💾 Lưu</button>
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XEM CHI TIẾT ĐƠN HÀNG -->
+    <div class="modal" id="modal-order-detail">
+        <div class="modal-box" style="max-width:640px">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h3>📦 Chi tiết đơn hàng</h3>
+            <div id="order-detail-content">
+                <div class="loading">Đang tải...</div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL THÊM/SỬA DANH MỤC -->
+    <div class="modal" id="modal-category">
+        <div class="modal-box" style="max-width:420px">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h3 id="modal-cat-title">Thêm danh mục mới</h3>
+            <input type="hidden" id="cat-edit-id">
+            <div class="form-group">
+                <label>ID danh mục *</label>
+                <input type="text" id="f-cat-id" placeholder="vd: c5, van_hoc, science">
+                <small style="color:#999;font-size:12px;margin-top:4px;display:block">Chỉ chữ cái, số, dấu - hoặc _.
+                    Không thể đổi sau khi tạo.</small>
+            </div>
+            <div class="form-group">
+                <label>Tên danh mục *</label>
+                <input type="text" id="f-cat-name" placeholder="vd: Khoa học, Lịch sử...">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="saveCategory()" style="flex:1">💾 Lưu</button>
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ĐỔI MẬT KHẨU USER -->
+    <div class="modal" id="modal-user-password">
+        <div class="modal-box" style="max-width:420px">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h3>🔑 Đặt lại mật khẩu</h3>
+            <p id="modal-password-label" style="color:var(--muted);margin-bottom:20px;font-size:14px;margin-top:-12px;">
+            </p>
+            <input type="hidden" id="password-user-id">
+            <div class="form-group">
+                <label>Mật khẩu mới *</label>
+                <input type="password" id="f-new-password" placeholder="Tối thiểu 6 ký tự">
+            </div>
+            <div class="form-group">
+                <label>Xác nhận mật khẩu *</label>
+                <input type="password" id="f-confirm-password" placeholder="Nhập lại mật khẩu mới">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="saveUserPassword()" style="flex:1">💾 Lưu mật khẩu</button>
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN XÓA USER -->
+    <div class="modal" id="modal-user-delete">
+        <div class="modal-box" style="max-width:420px">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h3>🗑️ Xóa tài khoản</h3>
+            <p id="modal-delete-label" style="color:var(--muted);margin:16px 0;font-size:14px;"></p>
+            <div
+                style="background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px 16px;font-size:13px;color:#856404;margin-bottom:20px;">
+                ⚠️ Toàn bộ lịch sử đơn hàng của người dùng này cũng sẽ bị xóa vĩnh viễn.
+            </div>
+            <input type="hidden" id="delete-user-id">
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="confirmDeleteUser()" style="flex:1">🗑️ Xác nhận xóa</button>
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TẠO TÀI KHOẢN MỚI -->
+    <div class="modal" id="modal-create-user">
+        <div class="modal-box" style="max-width:460px">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h3>👤 Thêm tài khoản mới</h3>
+            <div class="form-group">
+                <label>Họ và tên *</label>
+                <input type="text" id="f-new-user-name" placeholder="Nguyễn Văn A">
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="f-new-user-email" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu *</label>
+                <input type="password" id="f-new-user-password" placeholder="Tối thiểu 6 ký tự">
+            </div>
+            <div class="form-group">
+                <label>Vai trò</label>
+                <select id="f-new-user-role">
+                    <option value="user">👤 User</option>
+                    <option value="admin">👑 Admin</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="saveNewUser()" style="flex:1">💾 Tạo tài khoản</button>
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TẠO ĐƠN HÀNG MỚI -->
+    <div class="modal" id="modal-create-order">
+        <div class="modal-box" style="max-width:580px">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h3>📦 Thêm đơn hàng mới</h3>
+            <div class="form-group">
+                <label>Tài khoản đặt hàng *</label>
+                <select id="f-order-user">
+                    <option value="">-- Chọn người dùng --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Địa chỉ giao hàng *</label>
+                <input type="text" id="f-order-address" placeholder="Số nhà, đường, quận, tỉnh/thành...">
+            </div>
+            <div class="form-group">
+                <label>Sản phẩm *</label>
+                <div id="order-items-list"></div>
+                <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="addOrderItem()">+ Thêm sản
+                    phẩm</button>
+            </div>
+            <div
+                style="background:#faf9f6;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:700;color:var(--red);text-align:right;margin-top:8px">
+                Tổng: <span id="f-order-total">0đ</span>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="saveNewOrder()" style="flex:1">💾 Tạo đơn hàng</button>
+                <button class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

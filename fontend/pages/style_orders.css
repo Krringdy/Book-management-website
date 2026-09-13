@@ -1,0 +1,295 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: #f5f1e8;
+    color: #222;
+}
+
+/* HEADER */
+.header {
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 18px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    color: #8b1e1e;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-decoration: none;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #8b1e1e;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 2px solid #8b1e1e;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #8b1e1e;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    font-size: 36px;
+    color: #8b1e1e;
+    margin-bottom: 8px;
+}
+
+.page-sub {
+    color: #888;
+    margin-bottom: 40px;
+}
+
+/* LOADING */
+.loading {
+    text-align: center;
+    padding: 80px;
+    color: #aaa;
+    font-size: 18px;
+}
+
+/* EMPTY */
+.empty {
+    text-align: center;
+    padding: 80px;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.empty h3 {
+    font-size: 22px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.empty p {
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.empty a {
+    background: #8b1e1e;
+    color: white;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* ORDER CARD */
+.order-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.order-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.order-id {
+    font-weight: 700;
+    color: #333;
+    font-size: 16px;
+}
+
+.order-date {
+    color: #aaa;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.order-status {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-confirmed {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-shipping {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-done {
+    background: #c3e6cb;
+    color: #155724;
+}
+
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.order-items {
+    padding: 16px 24px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #fafafa;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item img {
+    width: 50px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-info strong {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.item-info span {
+    font-size: 13px;
+    color: #888;
+}
+
+.item-price {
+    font-weight: 700;
+    color: #8b1e1e;
+    font-size: 14px;
+}
+
+.order-footer {
+    padding: 16px 24px;
+    background: #fafafa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.order-address {
+    font-size: 13px;
+    color: #888;
+}
+
+.order-address span {
+    color: #555;
+    font-weight: 500;
+}
+
+.order-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.order-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #8b1e1e;
+}
+
+/* NÚT HỦY ĐƠN */
+.btn-cancel {
+    padding: 8px 18px;
+    background: #fff0f0;
+    color: #c0392b;
+    border: 1.5px solid #f5b7b1;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #c0392b;
+    color: white;
+    border-color: #c0392b;
+}
+
+/* TOAST */
+#toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: #1a1a1a;
+    color: white;
+    padding: 12px 26px;
+    border-radius: 50px;
+    font-size: 14px;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 9999;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+#toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+#toast.error {
+    background: #c0392b;
+}
+
+#toast.success {
+    background: #27ae60;
+}
